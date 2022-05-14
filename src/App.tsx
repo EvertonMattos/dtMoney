@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Modal from 'react-modal';
+import { Header } from "./components/Header";
+import { Dashboard } from "./components/Dashboard";
+import { GlobalStyle } from "./styles/global";
+import { useState } from 'react';
 
-function App() {
+
+Modal.setAppElement('#root');
+export function App() {
+  const [isOpenNewTransactionModal,setIsOpenNewTransactionModal] =useState(false);
+
+  function handleClickOpenModal(){
+    return setIsOpenNewTransactionModal(true)
+  }
+  function handleClickCloseModal(){
+    return setIsOpenNewTransactionModal(false)
+
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Header openNewTransactionModal={handleClickOpenModal} />
+    <Modal
+        isOpen={isOpenNewTransactionModal}
+        onAfterOpen={handleClickOpenModal}
+        onRequestClose={handleClickCloseModal}
+      >
+        <h1>hellow</h1>
+      </Modal>
+     <Dashboard/>
+     <GlobalStyle/>
+    </>
   );
 }
 
-export default App;
