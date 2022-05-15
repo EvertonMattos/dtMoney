@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState,FormEvent } from 'react';
 import Modal from 'react-modal'
 import imgClose from '../../assets/close.svg'
 import incomeIMG from '../../assets/income.svg'
 import outcomeIMG from '../../assets/outcome.svg'
+import { api } from '../services/axios';
 import { Container, TransactionsTypeButton, TypeBox } from './styles';
 
 interface NewTransactionModalProps{
@@ -10,8 +11,23 @@ interface NewTransactionModalProps{
   onRequestClose: () =>void;
 }
 export function NewTransactionModal({isOpen,onRequestClose}:NewTransactionModalProps){
+  const [title,setTitle] = useState('');
+  const [value,setValue] = useState(0);
+  const [category ,setCategory ] = useState('');
   const [type,setType] = useState('deposit');
+
+  function handleCreateNewTransaction(event:FormEvent){
+    event.preventDefault()
+    const data={
+      title,
+      value,
+      category,
+      type,
+     }
+     api.post('/transactions',data)
+  }
   return(
+
   <Modal
         isOpen={isOpen}
         onRequestClose={onRequestClose}
@@ -25,18 +41,24 @@ export function NewTransactionModal({isOpen,onRequestClose}:NewTransactionModalP
          >
           <img src={imgClose} alt="Fechar Modal"  />
         </button>
-       <Container>
+       <Container onSubmit={handleCreateNewTransaction}>
          <h2>Cadastrar Transação </h2>
-         <input placeholder="Titulo"        
+         <input 
+        placeholder="Titulo"
+        value={title} 
+        onChange={( event =>setTitle((event.target.value)))}
          />
          <input
-         type="number"
-          placeholder="Valor"        
+        type="number"
+        placeholder="Valor" 
+        value={value} 
+        onChange={( event =>setValue(Number(event.target.value)))}     
          />
          <TransactionsTypeButton>
            <TypeBox 
              onClick={()=>setType('deposit')}
              isActive={type === 'deposit'}
+             isActiveColors='green'
              >
              <img src={incomeIMG} alt="Entradas"/>
              <span>
@@ -46,6 +68,7 @@ export function NewTransactionModal({isOpen,onRequestClose}:NewTransactionModalP
            <TypeBox
            onClick={()=>setType('withdraw')}
            isActive={type === 'withdraw'}
+           isActiveColors='red'
            >
              <img src={outcomeIMG} alt="Saida"/>
              <span>

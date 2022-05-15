@@ -1,4 +1,4 @@
-import { darken } from 'polished';
+import { darken,transparentize } from 'polished';
 import styled  from 'styled-components';
 
 export const Container = styled.form`
@@ -49,13 +49,19 @@ gap: .5rem;
 `
 interface TypeBoxProps{
   isActive: boolean;
+  isActiveColors: 'red' | 'green' ;
+}
+const colors =
+{
+green: '#33CC95',
+red:'#E50E40'
 }
 export const TypeBox = styled.button<TypeBoxProps>`
 height:4rem;
 border:1px solid #d7d7d7;
 border-radius: .25rem;
 
-background: ${(props)=> props.isActive ? '#e44':'transparent'};
+background: ${(props)=> props.isActive ?  transparentize(0.9, colors[props.isActiveColors]): 'transparent'};
 display:flex;
 align-items:center;
 justify-content:center;
