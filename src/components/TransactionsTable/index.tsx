@@ -1,39 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../services/axios";
 import { Container } from "./styles";
 
-export function TransactionsTable(){
-useState(()=>{
-  api.get('transactions')
-  .then(response =>  console.log(response.data))
-})
- 
-return(
-  <Container> 
-    <table>
-      <thead>
-        <tr>
-        <th> Titulo</th>
-        <th>Preço</th>
-        <th>Categoria</th>
-        <th>Data</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Desevolvimento de site</td>
-          <td className="deposit">R$:2500</td>
-          <td>Venda</td>
-          <td>05/02/2005</td>
-        </tr>
-        <tr>
-          <td>Desevolvimento de site</td>
-          <td className="windrow">R$:-2500</td>
-          <td>Venda</td>
-          <td>09/02/2005</td>
-        </tr>
-      </tbody>
-    </table>
-  </Container>
-)
+interface Transactions {
+  id: number;
+  title: string;
+  amount: number;
+  type: string;
+  category: string;
+  createdAt: string;
+}
+export function TransactionsTable() {
+  const [transactions, setTransaction] = useState<Transactions[]>([]);
+  useEffect(() => {
+    api
+      .get("transactions")
+      .then((response) => setTransaction(response.data.transactions));
+  }, []);
+
+  return (
+    <Container>
+      <table>
+        <thead>
+          <tr>
+            <th> Titulo</th>
+            <th>Preço</th>
+            <th>Categoria</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((transaction) => {
+            return (
+              <tr key={transaction.id}>
+                <td> {transaction.title} </td>
+                <td className={transaction.type}> {new Intl.NumberFormat('pt-BR',{
+                  style:'currency',
+                  currency: 'BRL'
+                }).format(transaction.amount)} </td>
+                <td> {transaction.category} </td>
+                <td> {new Intl.DateTimeFormat('pt-BR').format(
+                  new Date(transaction.createdAt)
+                )} </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </Container>
+  );
 }

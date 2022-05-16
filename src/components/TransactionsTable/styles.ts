@@ -23,7 +23,7 @@ th{
       color:var(--text-title);
   }
 }
-& .windrow{
+& .withdraw{
   color:var(--red);
 }
 & .deposit{
