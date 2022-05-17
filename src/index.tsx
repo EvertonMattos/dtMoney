@@ -1,51 +1,56 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import {createServer,Model} from 'miragejs'
-import {App} from './App';
+import ReactDOM from 'react-dom';
+import { createServer, Model } from 'miragejs';
+import { App } from './App';
+
 
 createServer({
-  models:{
-    transactions:Model,
+
+  models: {
+    transaction: Model,
   },
+
   seeds(server){
     server.db.loadData({
-      transactions:[
+      transactions: [
         {
-          id: 1,
-          title:'Freelance de Website',
-          type:'deposit',
-          amount:6085,
-          category:"venda",
-          createdAt: new Date('2014-01-07 09:00:00'),
-        },{
-          id: 2,
-          title:'Aluguel',
-          type:'withdraw',
-          amount:1085,
-          category:"Compra",
-          createdAt: new Date('2014-01-07 09:00:00'),
+          id:1,
+          title: 'Freelancer de website',
+          type: 'deposit',
+          category: 'Dev',
+          amount: 6000,
+          createdAt: new Date('2021-02-21 09:00:00'),
+        },
+        {
+          id:2,
+          title: 'Aluguel',
+          type: 'withdraw',
+          category: 'Casa',
+          amount: 1100,
+          createdAt: new Date('2021-02-14 11:00:00'),
         }
-
-
-      ]
+      ],
     })
   },
+
   routes(){
-    this.namespace ='api';
-    this.get('/transactions',()=>{
-      return this.schema.all('transactions');
+    this.namespace = 'api';
+
+    this.get('/transactions', () => {
+        return this.schema.all('transaction');
     })
-    this.post('/transactions',(scheme,request)=>{
+
+    this.post('/transactions', (schema, request) => {
       const data = JSON.parse(request.requestBody)
-      return data
+
+      return schema.create('transaction', data)
     })
-}
+  }
 })
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
+
+ReactDOM.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
